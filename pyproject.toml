@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "market-data-lakehouse"
+version = "0.1.0"
+description = "Streaming ETL: Kafka -> consumers -> Snowflake/dbt incremental with idempotent upserts and late-event handling."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Yadnesh Deshpande" }]
+dependencies = ["duckdb>=0.9"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+include = ["lakehouse*"]

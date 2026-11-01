@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: stream
+    schema: raw
+    tables:
+      - name: raw_ticks
+        loaded_at_field: arrived_at
+        freshness:
+          warn_after: { count: 5, period: minute }
+          error_after: { count: 15, period: minute }
+
+models:
+  - name: stg_ticks
+    columns:
+      - name: symbol
+        tests: [not_null]
+      - name: event_time
+        tests: [not_null]
+      - name: ingest_seq
+        tests: [not_null]
+
+  - name: fct_latest_price
+    description: Latest price per symbol/event_time; one row per business key.
+    tests:
+      # The core correctness guarantee, enforced as a dbt test.
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [symbol, event_time]
+    columns:
+      - name: price
+        tests: [not_null]
